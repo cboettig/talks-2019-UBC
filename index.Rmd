@@ -1,0 +1,115 @@
+---
+author: "Carl Boettiger"
+institute: "UC Berkeley"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "solarized-light.css"]
+    lib_dir: libs
+    seal: false
+    nature:
+      highlightStyle: "solarized-light"
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: "%current%"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(#dev.args=list(bg="transparent"), 
+                      echo = FALSE, 
+                      message=FALSE, 
+                      warning=FALSE,
+                      fig.width=11, 
+                      fig.height=6.5, 
+                      cache = TRUE)
+
+library(tidyverse)
+library(ggthemes)
+library(magick)
+theme_set(theme_solarized(base_size=22))
+scale_colour_discrete <- function(...) scale_colour_solarized()
+scale_fill_discrete <- function(...) scale_fill_solarized()
+pal <- solarized_pal()(8)
+
+txtcolor <- "#586e75"
+
+
+library(patchwork)
+
+ggimage <- function(path, transparent = FALSE){
+  img <- magick::image_read(path)
+  if(transparent)  img <- magick::image_transparent(img, "white")
+  ggplot2::ggplot() + 
+  ggplot2::annotation_raster(img, 
+                    xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)  +   theme(axis.line = element_blank(), 
+  panel.background = element_blank())
+}
+
+```
+
+layout: true
+background-color: #fdf6e3
+class: center, top
+
+---
+
+# From Oceans to Fields: Socio-ecological Decision Making for the 21st Century
+
+
+<div class="my-footer">
+
+<a href="https://carlboettiger.info"> `r icon::fa("user")` Carl Boettiger</a> | 
+<a href="https://berkeley.edu"> `r icon::fa("briefcase")` UC Berkeley</a> | 
+<a href="https://twitter.com/cboettig"> `r icon::fa("twitter")` @cboettig</a>
+
+</div>
+
+---
+
+# First Slide
+
+.pull-left[
+
+- bulleted list
+- the bullets are invisible
+- that's nicer for centered text
+
+]
+.pull-right[
+
+```{r fig.width=6, fig.height=4}
+ggplot(mtcars, aes(cyl, mpg, fill=as.factor(cyl))) +
+  geom_bar(stat="identity", show.legend = FALSE) + 
+  ggtitle("Not mtcars again!")
+```
+]
+
+
+---
+
+# Acknowledgements
+
+.pull-left[
+
+```{r fig.width=6, fig.height=6}
+(ggimage("../image-library/people/milad.png") +
+ggimage("../image-library/people/millie.png")) / 
+(ggimage("../image-library/people/serge.png") +
+ggimage("../image-library/people/claire-kremen.jpg", TRUE))
+
+```
+
+]
+.pull-right[
+
+```{r fig.width=6, fig.height=6}
+ggimage("../image-library/people/dfs-cnh.jpg") /
+  (ggimage("../image-library/sponsors/nsf.png")  +     
+   ggimage("../image-library/sponsors/berkeley.png") * ggtitle("") + 
+     plot_layout(ncol = 2, widths = c(1, 2))
+  ) + plot_layout(ncol = 1, heights = c(2, 1))
+
+```
+
+]
