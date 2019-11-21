@@ -88,6 +88,10 @@ ggplot(mtcars, aes(cyl, mpg, fill=as.factor(cyl))) +
 
 ---
 
+# Reproducibility
+
+---
+
 # Acknowledgements
 
 .pull-left[
@@ -106,10 +110,15 @@ ggimage("../image-library/people/claire-kremen.jpg", TRUE))
 ```{r fig.width=6, fig.height=6}
 ggimage("../image-library/people/dfs-cnh.jpg") /
   (ggimage("../image-library/sponsors/nsf.png")  +     
-   ggimage("../image-library/sponsors/berkeley.png") * ggtitle("") + 
-     plot_layout(ncol = 2, widths = c(1, 2))
+    (ggimage("../image-library/sponsors/jetstream-logo.svg", TRUE) /     
+     ggimage("../image-library/sponsors/berkeley.png")  
+    ) +  plot_layout(ncol = 2, widths = c(1, 2))
   ) + plot_layout(ncol = 1, heights = c(2, 1))
 
+```
+
+```{r}
+ggimage("../image-library/sponsors/jetstream-logo.svg", TRUE)
 ```
 
 ]
