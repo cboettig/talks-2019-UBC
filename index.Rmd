@@ -30,7 +30,7 @@ library(magick)
 theme_set(theme_solarized(base_size=16))
 scale_colour_discrete <- function(...) scale_colour_solarized()
 scale_fill_discrete <- function(...) scale_fill_solarized()
-pal <- solarized_pal()(8)
+pal <- solarized_pal()(6)
 
 txtcolor <- "#586e75"
 
@@ -95,19 +95,191 @@ class: center, top
 
 ---
 
-## Clark
+
+# MSY (Schaefer 1954)
+
+```{r msy1, echo=FALSE}
+r <- 1
+K <- 100
+H <- r * K / 4
+unfished <- function(N) r * N * (1 - N / K) 
+logistic <- function(N) r * N * (1 - N / K) - H
+msy <- tibble(population_size = 0:100, 
+           growth_rate = unfished(population_size),
+           F = r * population_size / 2)
+msy %>%
+  ggplot(aes(population_size, growth_rate)) + 
+  geom_path(size=3, col = pal[[1]]) +
+  coord_cartesian(ylim=c(0,40)) + 
+  xlab("population size") + ylab("growth rate")
+ 
+```
+---
+
+
+# MSY (Schaefer 1954)
+
+```{r msy2, echo=FALSE}
+msy %>%
+  ggplot(aes(population_size, growth_rate)) + 
+  geom_path(size=3, col = pal[[1]]) +
+  geom_vline(aes(xintercept = K/2), lty = "dashed", 
+             size = 2, col = pal[[2]]) +
+  geom_text(aes(x = K/2 - 3, y= 10, 
+                label = "B[MSY]==K/2"),
+            parse = TRUE, angle=90, col = pal[2],size=14) +
+  coord_cartesian(ylim=c(0,40)) + 
+  xlab("population size") + ylab("growth rate")
+ 
+```
+
+$$ H = F \cdot B $$
 
 ---
 
-## Reed
+
+# MSY (Schaefer 1954)
+
+```{r msy3, echo=FALSE}
+msy %>%
+  ggplot(aes(population_size, growth_rate)) + 
+  geom_path(size=3, col = pal[[1]]) +
+  geom_hline(aes(yintercept = r * K / 4), lty = "dashed", 
+             size = 2, col = pal[[3]]) + 
+  geom_text(aes(y = r*K/4 - 2, x = 15, 
+                label = "H[MSY]==rK/4"),
+            parse = TRUE, col = pal[3], size = 14) + 
+  geom_vline(aes(xintercept = K/2), lty = "dashed", 
+             size = 2, col = pal[[2]]) +
+  geom_text(aes(x = K/2 - 3, y= 10, 
+                label = "B[MSY]==K/2"),
+            parse = TRUE, angle=90, col = pal[2],size=14) + 
+  coord_cartesian(ylim=c(0,40)) + 
+  xlab("population size") + ylab("growth rate")
+ 
+```
+
 
 ---
 
-## Clark & Kirkwood
+# MSY (Schaefer 1954)
+
+```{r msy4, echo=FALSE}
+msy %>%
+  ggplot(aes(population_size, growth_rate)) + 
+  geom_path(size=3, col = pal[[1]]) +
+  xlab("population size") + ylab("growth rate") + 
+  coord_cartesian(ylim=c(0,40)) + 
+  geom_vline(aes(xintercept = K/2), lty = "dashed", 
+             size = 2, col = pal[[2]]) +
+  geom_text(aes(x = K/2 - 3, y= 10, 
+                label = "B[MSY]==K/2"),
+              parse = TRUE, angle=90, col = pal[2],size=14) + 
+
+  geom_hline(aes(yintercept = r * K / 4), lty = "dashed", 
+             size = 2, col = pal[[3]]) + 
+  geom_text(aes(y = r*K/4 - 2, x = 15, 
+                label = "H[MSY]==rK/4"),
+            parse = TRUE, col = pal[[3]], size = 14) + 
+
+    geom_line(aes(y = F), size = 3, lty = "dashed", 
+              col = pal[[6]])  + 
+  geom_text(aes(y = 5, x = 15, angle=90*40/100,
+                label = "F[MSY]==r/2"),
+            parse = TRUE, col = pal[[6]], size = 14)
+ 
+```
 
 ---
 
-## Sethi et al
+## Constant Escapement (Clark 1973)
+
+```{r}
+clark_harvest <- function(N){ pmax(N - K/2, 0)} 
+const_escape <- function(N) pmin(N, K/2)
+clark <- tibble(population_size = 0:100, 
+           growth_rate = unfished(population_size),
+           escapement = const_escape(population_size))
+
+clark %>%
+  ggplot(aes(population_size, escapement)) + 
+  geom_path(size=3, col = pal[[1]]) +
+  xlab("population size") + ylab("escapement (B - H)") + 
+  coord_cartesian(ylim=c(0,60))
+```
+
+
+---
+
+## Constant Escapement (Clark 1973)
+
+
+```{r}
+
+clark %>%
+  ggplot(aes(population_size, escapement)) + 
+  geom_path(size=3, col = pal[[1]]) +
+  xlab("population size") + ylab("escapement (B - H)") + 
+  coord_cartesian(ylim=c(0,60)) + 
+ geom_vline(aes(xintercept = K/2), lty = "dashed", 
+             size = 2, col = pal[[2]]) +
+  geom_text(aes(x = K/2 - 3, y= 10, 
+                label = "B[MSY]==K/2"),
+              parse = TRUE, angle=90, col = pal[2],size=10) + 
+
+  geom_hline(aes(yintercept = K / 2), lty = "dashed", 
+             size = 2, col = pal[[3]]) + 
+  geom_text(aes(y = K/2 - 2, x = 15, 
+                label = "B[MSY]"),
+            parse = TRUE, col = pal[[3]], size = 10)  + 
+   geom_text(aes(y = 5, x = 15, angle=90*40/100,
+                label = "H==0"),
+            parse = TRUE, col = pal[[1]], size = 10)
+```
+
+---
+
+## Stochastic growth (Reed 1979)
+
+```{r}
+ggimage("../image-library/published/reed1979.png", TRUE)
+```
+
+
+---
+
+> An important tacit assumption in Reed’s analysis, as in the other works referred to above, is that the recruitment level X is known accurately prior to the harvest decision, [...] In the case of fishery resources, the stock level X is almost never known very accurately, owing to the difficulty of observing fish in their natural environment.
+
+-- <i>Clark & Kirkwood 1986</i>
+
+---
+
+## Clark & Kirkwood 1986
+
+```{r}
+ggimage("../image-library/published/clark1987.png", TRUE)
+```
+
+--
+
+> he above results appear to contradict the conventional wisdom of renewable resource management, under which high uncertainty would call for increased caution in the setting of quotas.
+
+---
+
+## "Simplifying Assumptions"
+
+
+
+
+---
+
+## Sethi et al 2005
+
+```{r}
+ggimage("../image-library/published/sethi2005.png", TRUE)
+```
+
+> It may seem counter-intuitive that a measurement error causes lower expected escapements below the deterministic fishery closure threshold.
 
 ---
 
@@ -115,7 +287,19 @@ class: center, top
 
 ---
 
+## From MDP to POMDP
+
+
+---
+
 ## Future of Fish
+
+---
+
+## Rights-Based Management
+
+Is this an emergent property under RBFM or only possible from top-down planning?
+
 
 ---
 layout: false
@@ -124,7 +308,7 @@ background-position: center
 background-size: 140%
 class: center, middle, inverse
 
-# Adoption in Diversified Farming Systems
+# Individual Decision-Making: Adoption of Diversified Farming Systems
 
 <div class="credit">
 image: Yann Arthus-Bertrand
@@ -162,9 +346,24 @@ ggimage("../image-library/published/dfs-rosa-2019.png", TRUE)
 
 ## Model
 
+- uncertainty
+- Forward-looking decision-making
+
 ---
 
-# Future of Decisions?
+## Syndromes of Production
+
+- assumptions of scale: an individual farmer's production will not influence the 
+
+---
+
+# Future of Decisions
+
+- Fisheries: Imagine a central planner with utalitarian objectives...
+- but could also imagine this would be the result of the appropriate market
+- DFS: Imagine emergent individual decisions, explore how these respond to management scenarios
+
+What if decisions algorithms actually made decisions?
 
 
 ---
