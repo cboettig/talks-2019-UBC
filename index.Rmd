@@ -42,9 +42,11 @@ ggimage <- function(path, transparent = FALSE){
   if(transparent)  img <- magick::image_transparent(img, "white")
   ggplot2::ggplot() + 
   ggplot2::annotation_raster(img, 
-                    xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)  +   theme(axis.line = element_blank(), 
-  panel.background = element_blank())
+                    xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf) +
+    theme(axis.line = element_blank(), 
+          panel.background = element_blank())
 }
+
 
 ggblank <- function() ggplot() + geom_blank() + 
   theme(axis.line = element_blank(), panel.background = element_blank())
@@ -68,6 +70,12 @@ class: center, top
 <a href="https://twitter.com/cboettig"> `r icon::fa("twitter")` @cboettig</a>
 
 </div>
+
+---
+
+```{r}
+ggimage("../image-library/noaa/noaa_fisheries.jpg") + ggimage("../image-library/img/organic-farm.jpg")
+```
 
 
 ---
@@ -99,6 +107,7 @@ class: center, top
 # MSY (Schaefer 1954)
 
 ```{r msy1, echo=FALSE}
+
 r <- 1
 K <- 100
 H <- r * K / 4
@@ -112,8 +121,11 @@ msy %>%
   geom_path(size=3, col = pal[[1]]) +
   coord_cartesian(ylim=c(0,40)) + 
   xlab("population size") + ylab("growth rate")
+
  
 ```
+
+
 ---
 
 
@@ -241,12 +253,27 @@ clark %>%
 
 ## Stochastic growth (Reed 1979)
 
-```{r}
+```{r fig.height=3, fig.width=6}
 ggimage("../image-library/published/reed1979.png", TRUE)
+```
+
+--
+
+```{r fig.height=4}
+clark %>%
+  ggplot(aes(population_size, escapement)) + 
+  geom_path(size=3, col = pal[[1]]) +
+  xlab("population size") + ylab("escapement (B - H)") + 
+  coord_cartesian(ylim=c(0,60))
 ```
 
 
 ---
+
+## Adding Measurement Uncertainty (Clark & Kirkwood 1986)
+
+
+### In which tackling the first paradox...
 
 > An important tacit assumption in Reed’s analysis, as in the other works referred to above, is that the recruitment level X is known accurately prior to the harvest decision, [...] In the case of fishery resources, the stock level X is almost never known very accurately, owing to the difficulty of observing fish in their natural environment.
 
@@ -254,51 +281,267 @@ ggimage("../image-library/published/reed1979.png", TRUE)
 
 ---
 
-## Clark & Kirkwood 1986
+### ... leads to another paradox paradox! 
 
-```{r}
+
+```{r fig.height=5.5}
 ggimage("../image-library/published/clark1987.png", TRUE)
 ```
 
 --
 
-> he above results appear to contradict the conventional wisdom of renewable resource management, under which high uncertainty would call for increased caution in the setting of quotas.
+> The above results appear to **contradict the conventional wisdom** of renewable resource management, under which high uncertainty would call for increased caution in the setting of quotas.
+
+-- <i>Clark & Kirkwood 1986</i>
 
 ---
 
-## "Simplifying Assumptions"
+## "Simplifying Assumptions" 
 
+### How did we get here?
 
+> For reasons of tractability, we shall adopt the simplifying assumption that the escapement level S is known exactly at the end of that period. (The mathematical difficulty of the problem increases markedly if this assumption is relaxed.)
+
+-- <i>Clark & Kirkwood 1986</i>
 
 
 ---
 
-## Sethi et al 2005
+## Complete Measurement Uncertainty 
 
-```{r}
+
+
+```{r fig.height=5.5}
 ggimage("../image-library/published/sethi2005.png", TRUE)
 ```
 
+--
+
 > It may seem counter-intuitive that a measurement error causes lower expected escapements below the deterministic fishery closure threshold.
 
+-- Sethi, Costello et al, 2005
+
+
 ---
 
-## A Resolution to the Paradox
+## How did we get here again?
+
+> We should also note the somewhat misleading use of the term "optimal policy" in this context. Specifically, Assumption 3 states that the manager **uses only the current measurement when forming expectations**. This assumption implies that the current measurement is the only state variable for the manager’s problem. Past measurements may contain some information about the current stock; a more sophisticated manager would use that information in forming expectations. 
+
+--
+
+### So why did we do that?
+
+--
+
+> Second, the optimization problem for a manager who uses past measurements is very complicated...
 
 ---
 
-## From MDP to POMDP
+## Meanwhile...
+
+
+```{r}
+ggimage("../image-library/published/smallwood-sondik-1973.png", TRUE)
+```
+
+---
+
+## 20 years later...
+
+
+```{r}
+ggimage("../image-library/published/thrun-1992.png", TRUE) + ggtitle("Thrun 1992")
+```
+
+---
+
+## DARPA 2005 Autonomous Vehicle Challenge
+
+```{r}
+ggimage("../image-library/img/self-driving-darpa-2005.jpg")
+```
+
+#### "Stanely," from Stanford Racing Team led by Sebastian Thrun
+---
+
+## So back to fisheries...
+
+
+```{r}
+ggimage("../image-library/noaa/noaa_tuna.jpg")
+```
+
+
+---
+
+
+```{r jetstream, fig.height=8}
+ggimage("../image-library/img/jetstream.jpg") +
+  ggimage("../image-library/img/self-driving.png") + 
+  plot_layout(ncol = 1)
+```
+
+
+
+---
+
+## Damn the complexity, full speed ahead!
+
+```{r pomdp_policies}
+policies_w_priors <- readr::read_csv("../talks-2019-theory/data/policies_w_priors.csv")
+
+df <- policies_w_priors %>% select(-harvest) %>%
+  gather(panel, value, -state, -policy) %>%
+  rename(method = policy) 
+
+policy <- df %>% filter(panel == "escapement")
+prior <- df %>% filter(panel == "prior") %>% 
+  mutate(method = fct_recode(method, 
+                             "POMDP high" = "POMDP: high prior",
+                              "POMDP low" = "POMDP: low prior"))
+```
+
+
+```{r, fig.height=5, fig.width=9}
+p1 <- policy %>% filter(method == "CE") %>%
+  ggplot(aes(state,value, col=method)) + 
+  geom_line(lwd=3, alpha = 0.9, show.legend = FALSE) + 
+   xlab("observed stock size") +
+   ylab("policy")+
+  coord_cartesian(xlim = c(0,1), ylim = c(0,.8))
+p1 +  ggblank() 
+
+```
+
+
+
+
+---
+
+## A resolution to the paradox!
+
+```{r, fig.height=5, fig.width=9}
+p1 <- policy %>% filter(method != "TAC") %>%
+  ggplot(aes(state,value, col=method)) + 
+  geom_line(lwd=3, alpha = 0.9, show.legend = FALSE) + 
+   xlab("observed stock size") +
+   ylab("policy")+
+  coord_cartesian(xlim = c(0,1), ylim = c(0,.8))
+
+p2 <- prior %>% filter(method != "TAC") %>%  
+  ggplot(aes(state,value, col=method)) + 
+  geom_line(lwd=3, alpha = 0.9) + 
+  xlab("true stock size") +
+   ylab("belief probability") +
+  coord_cartesian(xlim = c(0,1), ylim = c(0,.8)) + 
+  guides(col = guide_legend(nrow=2)) + 
+  theme(legend.position = "bottom")
+p1 +  (ggblank() / p2)
+
+```
+
+Memarzadeh & Boettiger (2019)
+---
+
+
+## Comparison to "constant mortality" rule 
+
+```{r, fig.height=5, fig.width=9}
+p1 <- policy %>% filter(method %in% c("CE","TAC")) %>%
+  ggplot(aes(state,value, col=method)) + 
+  geom_line(lwd=3, alpha = 0.9) + 
+   xlab("observed stock size") +
+   ylab("policy") +
+  coord_cartesian(xlim = c(0,1), ylim = c(0,.8))
+
+p1 +  ggblank() 
+
+```
 
 
 ---
 
 ## Future of Fish
 
+```{r}
+ggimage("../image-library/published/costello-2016.png", TRUE)
+```
+
 ---
 
-## Rights-Based Management
+```{r}
+ggimage("../image-library/published/pnas-2019-fig1.png")
+```
 
-Is this an emergent property under RBFM or only possible from top-down planning?
+
+Memarzadeh et al, 2019 *PNAS*
+
+---
+
+### Forecast outcomes by location and taxon
+
+```{r}
+ggimage("../image-library/published/pnas-2019-fig2.png")
+```
+
+
+Memarzadeh et al, 2019 *PNAS*
+
+---
+
+### Life history and environmental sensitivity influence impact
+
+
+```{r}
+ggimage("../image-library/published/pnas-2019-fig3.png")
+```
+
+Memarzadeh et al, 2019 *PNAS*
+
+
+---
+
+## But does this really controdict Costello et al 2016?
+
+--
+
+### Rights-Based Fisheries Management
+
+
+```{r}
+ggimage("../image-library/published/costello-2016.png", TRUE)
+```
+
+
+---
+
+## Setting Total Allowable Catch (TAC) 
+
+### Rights-Based Fisheries Management
+
+> the optimal TAC at each point of time corresponds to the maximization of the quota share price, provided, of course, that the Individual Transferable Quota (ITQ) property rights are of sufficiently high quality. 
+
+> This implies that the TAC-setting authority does not have to engage in extensive data collection and calculations to set the best possible TAC. It only needs to adjust the TAC until the share quota price is maximized. 
+
+
+-- Arnason 2012
+
+---
+
+## Decision-Making in Fisheries Management: Reflections
+
+- Dangers of certain simplifying assumptions
+
+--
+
+- Theoretical, algorithmic, and computational advances in other fields can improve ecological decisions
+
+--
+
+- DO these decisions really come from technology or human behavior?
+
+(Recall the POMDP solution is far more intuitive than paradoxical claims of previous work)
 
 
 ---
@@ -386,7 +629,7 @@ ggimage("../image-library/people/claire-kremen.jpg", TRUE))
 
 
 ```{r fig.width=8, fig.height=2}
-ggblank() + ggimage("../image-library/people/allison_horst_artist.jpg") + ylab("Image Credits") + xlab("Allison Horst") + ggimage("../image-library/sponsors/royalsociety.jpg") + ggimage("../image-library/sponsors/noaa.png", TRUE) + plot_layout(ncol=4)
+plot_spacer() + ggimage("../image-library/people/allison_horst_artist.jpg") + ylab("Image Credits") + xlab("Allison Horst") + ggimage("../image-library/sponsors/royalsociety.jpg") + ggimage("../image-library/sponsors/noaa.png", TRUE) + plot_layout(ncol=4)
 
 ```
 
