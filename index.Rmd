@@ -44,7 +44,11 @@ ggimage <- function(path, transparent = FALSE){
   ggplot2::annotation_raster(img, 
                     xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf) +
     theme(axis.line = element_blank(), 
-          panel.background = element_blank())
+          panel.background = element_blank(),
+          axis.ticks = element_blank(), 
+          axis.text = element_blank(), 
+          axis.title = element_blank())
+  
 }
 
 
@@ -73,8 +77,14 @@ class: center, top
 
 ---
 
-```{r}
-ggimage("../image-library/noaa/noaa_fisheries.jpg") + ggimage("../image-library/img/organic-farm.jpg")
+```{r fig.width=11, fig.height=3.5}
+ggimage("../image-library/noaa/noaa_fisheries.jpg") + 
+  geom_text(aes(x = 10, y = 10), label = "Fisheries", size=50, col="white")
+```
+
+```{r fig.width=11, fig.height=3.5}
+ggimage("../image-library/img/organic-farm.jpg") + 
+  geom_text(aes(x = 10, y = 10), label = "Farming", size=50, col="white")
 ```
 
 
@@ -97,14 +107,17 @@ image: NOAA
 layout: true
 background-color: #fdf6e3
 class: center, top
----
-
-## A Paradox of Uncertainty
 
 ---
+class: center, middle
 
 
-# MSY (Schaefer 1954)
+## Managing Fisheries Under Uncertainty: A History of Paradox
+
+---
+
+
+## MSY (Schaefer 1954)
 
 ```{r msy1, echo=FALSE}
 
@@ -129,7 +142,7 @@ msy %>%
 ---
 
 
-# MSY (Schaefer 1954)
+## MSY (Schaefer 1954)
 
 ```{r msy2, echo=FALSE}
 msy %>%
@@ -150,7 +163,7 @@ $$ H = F \cdot B $$
 ---
 
 
-# MSY (Schaefer 1954)
+## MSY (Schaefer 1954)
 
 ```{r msy3, echo=FALSE}
 msy %>%
@@ -174,7 +187,7 @@ msy %>%
 
 ---
 
-# MSY (Schaefer 1954)
+## MSY (Schaefer 1954)
 
 ```{r msy4, echo=FALSE}
 msy %>%
@@ -267,17 +280,28 @@ clark %>%
   coord_cartesian(ylim=c(0,60))
 ```
 
+---
+
+
+## Stochastic growth (Reed 1979)
+
+```{r fig.height=3, fig.width=6}
+ggimage("../image-library/published/reed1979.png", TRUE)
+```
+
+### Introducing uncertainty != more cautious harvesting
+
+#### Is uncertainty truly negligible?
 
 ---
 
-## Adding Measurement Uncertainty (Clark & Kirkwood 1986)
-
-
-### In which tackling the first paradox...
+## Adding more uncertainty (Clark & Kirkwood 1986)
 
 > An important tacit assumption in Reed’s analysis, as in the other works referred to above, is that the recruitment level X is known accurately prior to the harvest decision, [...] In the case of fishery resources, the stock level X is almost never known very accurately, owing to the difficulty of observing fish in their natural environment.
 
 -- <i>Clark & Kirkwood 1986</i>
+
+### In which tackling the first paradox...
 
 ---
 
@@ -362,7 +386,9 @@ ggimage("../image-library/published/thrun-1992.png", TRUE) + ggtitle("Thrun 1992
 ggimage("../image-library/img/self-driving-darpa-2005.jpg")
 ```
 
-#### "Stanely," from Stanford Racing Team led by Sebastian Thrun
+
+#### "Stanely," Stanford Racing Team led by Sebastian Thrun ![](../image-library/icons/cc-zero-small.png)
+
 ---
 
 ## So back to fisheries...
@@ -502,16 +528,15 @@ Memarzadeh et al, 2019 *PNAS*
 
 ---
 
-## But does this really controdict Costello et al 2016?
+## Does this really contradict Costello et al?
 
 --
 
-### Rights-Based Fisheries Management
-
-
-```{r}
+```{r fig.height=5.5, fig.width=10}
 ggimage("../image-library/published/costello-2016.png", TRUE)
 ```
+
+### Rights-Based Fisheries Management
 
 
 ---
@@ -520,7 +545,11 @@ ggimage("../image-library/published/costello-2016.png", TRUE)
 
 ### Rights-Based Fisheries Management
 
+--
+
 > the optimal TAC at each point of time corresponds to the maximization of the quota share price, provided, of course, that the Individual Transferable Quota (ITQ) property rights are of sufficiently high quality. 
+
+--
 
 > This implies that the TAC-setting authority does not have to engage in extensive data collection and calculations to set the best possible TAC. It only needs to adjust the TAC until the share quota price is maximized. 
 
@@ -528,20 +557,25 @@ ggimage("../image-library/published/costello-2016.png", TRUE)
 -- Arnason 2012
 
 ---
+class: left
 
 ## Decision-Making in Fisheries Management: Reflections
 
-- Dangers of certain simplifying assumptions
+--
+
+#### Dangers of certain simplifying assumptions
 
 --
 
-- Theoretical, algorithmic, and computational advances in other fields can improve ecological decisions
+#### Theoretical, algorithmic, and computational advances in other fields can improve ecological decisions
 
 --
 
-- DO these decisions really come from technology or human behavior?
+#### Do these decisions really come from technology or human behavior?
 
-(Recall the POMDP solution is far more intuitive than paradoxical claims of previous work)
+--
+ 
+*POMDP solution is qualitatively far more intuitive!*
 
 
 ---
@@ -586,32 +620,205 @@ ggimage("../image-library/published/dfs-rosa-2019.png", TRUE)
 <i>Rosa Schleich et al (2019), Ecological Economics</i>
 
 ---
+class: center, middle
+
+## What factors most influence the adoption of Diversified Practices?
+
+---
 
 ## Model
 
-- uncertainty
-- Forward-looking decision-making
+.pull-left[
+- Reflects uncertainty
+- Is forward-looking, dynamic (Ecosystem services take time to establish)
+- Balance costs of adopting DFS with benefits of ecosystem services
+
+]
+.pull-right[
+
+![](../image-library/royalsociety/balance.jpg)
+
+```{r}
+#ggimage("../image-library/royalsociety/balance.jpg")
+```
+
+### Utility
+
+Individual utility reflects individual values, objectives, social, ecological, and economic context
+
+]
+
+---
+class: left
+
+.pull-left[
+
+## Diversified Farming Practices
+
+
+]
+.pull-right[
+
+## Ecosystem Services
+
+Higher investment in diversified pratices drives gradual improvement in ecosystem services
+
+- higher biodiversity, 
+- improved pest control, 
+- higher weed control and soil health, 
+- reduced soil erosion, 
+- improved water and nutrient management, 
+- higher carbon sequestration 
+- increased resilience
+- ...
+
+- long-term yield improvement, reduced fertilizer and machinery input, higher profitability and less risk
+
+]
+
+
 
 ---
 
-## Syndromes of Production
+## Tipping Point Dynamics in Diversfied Farming Systems?
 
-- assumptions of scale: an individual farmer's production will not influence the 
+```{r}
+df <- read_tsv("../../boettiger-lab/dfs-mdp/data/fig0.tsv.gz")
+df %>% ggplot(aes(state,action)) + geom_point() +
+  coord_cartesian(xlim = c(0,1))
+```
+
 
 ---
+
+## Tipping Point Dynamics in Diversfied Farming Systems?
+
+```{r}
+sims <- read_tsv("../../boettiger-lab/dfs-mdp/data/fig1.tsv.gz")
+
+sim_plot <- function(sims, title = ""){
+
+actions <- seq(0, 1, length = 100)
+states <- seq(0, 1.5, length = 100) 
+
+df <- sims %>% 
+    select(-obs,-value) %>% # tidy
+    mutate(state = states[state], action = actions[action]) # rescale
+  
+   panelA <- df %>% 
+    ggplot(aes(time, state, group = reps, col=time)) + 
+    geom_path(alpha=0.1, show.legend = FALSE) + ggtitle(title)
+   
+   Tmax <- max(sims$time)
+   panelB <- df %>% filter(time %in% c(1, Tmax))  %>%
+     ggplot() + geom_density(aes(state, group = time, fill = time), alpha=0.8) + 
+     scale_fill_continuous(breaks=c(1,10)) +
+     coord_flip()
+   
+  panelA + panelB + plot_layout(widths = c(3, 1))
+}
+sim_plot(sims)
+
+```
+
+
+---
+
+## Role of land tenure
+
+#### Short (2-yr) land tenures:
+
+```{r}
+sims <- read_tsv("../../boettiger-lab/dfs-mdp/data/fig2.tsv.gz")
+sim_plot(sims)
+
+```
+
+---
+
+## How would subsidies influence adoption of diversified practices?
+
+
+--
+
+### **Scenario A**: High value incentive (reducing cost of diversified practice) over short duration (2 years)
+
+--
+
+### **Scenario B**: Small subsidy sustained over longer duration (10 years)
+
+---
+
+## How would subsidies influence adoption of diversified practices?
+
+
+```{r}
+read_tsv("../../boettiger-lab/dfs-mdp/data/fig3A.tsv.gz") %>%
+  sim_plot("2-year, large subsidy")
+```
+
+--
+
+```{r}
+read_tsv("../../boettiger-lab/dfs-mdp/data/fig3B.tsv.gz") %>%
+  sim_plot("10-year, small subsidy")
+```
+
+
+---
+class: left, top
 
 # Future of Decisions
 
-- Fisheries: Imagine a central planner with utalitarian objectives...
-- but could also imagine this would be the result of the appropriate market
-- DFS: Imagine emergent individual decisions, explore how these respond to management scenarios
+--
 
-What if decisions algorithms actually made decisions?
+#### Artificial intelligence meets fisheries ...
+
+--
+
+#### Or would rights-based fisheries already be self-driving cars?
+
+--
+
+####  Diversified farming: individual decisions vs policy scenarios
+
+--
+
+*<i>What if decisions algorithms actually made decisions?</i>*
+
+---
+
+# Ethics and Algorithms in Ecological Conservation & Management?
+
+![](../image-library/img/algo-decisions.png)
+
+---
+
+# Reproducibility
+
+--
+
+<https://github.com/boettiger-lab/pomdp-intro>
+
+![](../image-library/img/pomdp-intro-reproduce.png)
+
 
 
 ---
 
 # Reproducibility
+
+
+![](../image-library/img/sarsop-repo.png)
+![](../image-library/img/sarsop-readme.png)
+
+---
+
+# Reproducibility
+![](../image-library/hexes/arkdb.png) ![](../image-library/hexes/piggyback.png)  ![](../image-library/hexes/taxadb.png)
+
+![](../image-library/hexes/ropensci-2.png) ![](../image-library/hexes/rocker.png )
+
 
 ---
 
@@ -629,7 +836,11 @@ ggimage("../image-library/people/claire-kremen.jpg", TRUE))
 
 
 ```{r fig.width=8, fig.height=2}
-plot_spacer() + ggimage("../image-library/people/allison_horst_artist.jpg") + ylab("Image Credits") + xlab("Allison Horst") + ggimage("../image-library/sponsors/royalsociety.jpg") + ggimage("../image-library/sponsors/noaa.png", TRUE) + plot_layout(ncol=4)
+plot_spacer() + 
+  #ggimage("../image-library/people/allison_horst_artist.jpg") + xlab("Allison Horst") + 
+  ggimage("../image-library/sponsors/royalsociety.jpg") + ylab("Image Credits")  +
+  ggimage("../image-library/sponsors/noaa.png", TRUE) + plot_layout(ncol=4) +
+  plot_spacer()
 
 ```
 
