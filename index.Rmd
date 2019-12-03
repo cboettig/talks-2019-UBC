@@ -501,7 +501,7 @@ ggimage("../image-library/published/pnas-2019-fig1.png")
 ```
 
 
-Memarzadeh et al, 2019 *PNAS*
+Memarzadeh et al, 2019 <i>PNAS</i>
 
 ---
 
@@ -512,7 +512,7 @@ ggimage("../image-library/published/pnas-2019-fig2.png")
 ```
 
 
-Memarzadeh et al, 2019 *PNAS*
+Memarzadeh et al, 2019 <i>PNAS</i>
 
 ---
 
@@ -523,7 +523,7 @@ Memarzadeh et al, 2019 *PNAS*
 ggimage("../image-library/published/pnas-2019-fig3.png")
 ```
 
-Memarzadeh et al, 2019 *PNAS*
+Memarzadeh et al, 2019 <i>PNAS</i>
 
 
 ---
@@ -624,65 +624,111 @@ class: center, middle
 
 ## What factors most influence the adoption of Diversified Practices?
 
----
-
-## Model
-
-.pull-left[
-- Reflects uncertainty
-- Is forward-looking, dynamic (Ecosystem services take time to establish)
-- Balance costs of adopting DFS with benefits of ecosystem services
-
-]
-.pull-right[
-
-![](../image-library/royalsociety/balance.jpg)
-
-```{r}
-#ggimage("../image-library/royalsociety/balance.jpg")
-```
-
-### Utility
-
-Individual utility reflects individual values, objectives, social, ecological, and economic context
-
-]
 
 ---
-class: left
+class: left, top
 
 .pull-left[
 
 ## Diversified Farming Practices
 
+- `r icon::fa("leaf")` Cover crops
+- `r icon::fa("recycle")` Crop rotation
+- `r icon::fa("chess-board")` reduced tillage
+- `r icon::fa("tree")` Agroforestry
+- `r icon::fa("map")` Hedge rows 
+- `r icon::fa("crow")` Mixed crop-livestock
+- `r icon::fa("seedling")` Organic agriculture
+- `r icon::fa("gem")` Conservation agriculture
+- ...
 
 ]
 .pull-right[
 
 ## Ecosystem Services
 
-Higher investment in diversified pratices drives gradual improvement in ecosystem services
+- `r icon::fa("dove")` higher biodiversity
+- `r icon::fa("bug")` improved pest control
+- `r icon::fa("seedling")` weed control & soil health
+- `r icon::fa("map")` reduced soil erosion
+- `r icon::fa("apple")` improved nutrient management
+- `r icon::fa("recycle")` carbon sequestration
+- `r icon::fa("globe")` increased resilience
 
-- higher biodiversity, 
-- improved pest control, 
-- higher weed control and soil health, 
-- reduced soil erosion, 
-- improved water and nutrient management, 
-- higher carbon sequestration 
-- increased resilience
-- ...
-
-- long-term yield improvement, reduced fertilizer and machinery input, higher profitability and less risk
+- `r icon::fa("seedling")` yield improvement
+- `r icon::fa("truck")` reduced fertilizer input
+- `r icon::fa("dollar-sign")` higher profitability and less risk
 
 ]
 
 
+<i>Rosa Schleich et al (2019), Ecological Economics</i>
+
 
 ---
 
-## Tipping Point Dynamics in Diversfied Farming Systems?
+## Markov Decision Process Model
 
-```{r}
+![](model-metaphor/Slide1.png)
+
+
+---
+
+## Markov Decision Process Model
+
+![](model-metaphor/Slide2.png)
+
+
+---
+
+## Markov Decision Process Model
+
+![](model-metaphor/Slide3.png)
+
+---
+
+## Markov Decision Process Model
+
+![](model-metaphor/Slide4.png)
+
+---
+
+## Markov Decision Process Model
+
+![](model-metaphor/Slide5.png)
+
+---
+
+## Markov Decision Process Model
+
+![](model-metaphor/Slide6.png)
+
+---
+
+## Markov Decision Process Model
+
+![](model-metaphor/Slide7.png)
+
+---
+
+## Markov Decision Process Model
+
+![](model-metaphor/Slide8.png)
+
+
+---
+
+## Markov Decision Process Model
+
+![](model-metaphor/Slide9.png)
+
+
+
+
+---
+## A simple decision rule emerges:
+
+```{r fig.width=7, fig.height=5}
 df <- read_tsv("../../boettiger-lab/dfs-mdp/data/fig0.tsv.gz")
 df %>% ggplot(aes(state,action)) + geom_point() +
   coord_cartesian(xlim = c(0,1))
@@ -691,7 +737,7 @@ df %>% ggplot(aes(state,action)) + geom_point() +
 
 ---
 
-## Tipping Point Dynamics in Diversfied Farming Systems?
+## Tipping Point Dynamics?
 
 ```{r}
 sims <- read_tsv("../../boettiger-lab/dfs-mdp/data/fig1.tsv.gz")
@@ -726,12 +772,24 @@ sim_plot(sims)
 
 ## Role of land tenure
 
-#### Short (2-yr) land tenures:
+### Short (2-yr) land tenures:
 
 ```{r}
-sims <- read_tsv("../../boettiger-lab/dfs-mdp/data/fig2.tsv.gz")
-sim_plot(sims)
+sims_2yr <- read_tsv("../../boettiger-lab/dfs-mdp/data/fig2.tsv.gz")
+sim_plot(sims_2yr)
 
+```
+
+
+---
+
+## Role of land tenure
+
+### Long tenures / ownership
+
+```{r}
+sims <- read_tsv("../../boettiger-lab/dfs-mdp/data/fig1.tsv.gz")
+sim_plot(sims)
 ```
 
 ---
@@ -751,17 +809,21 @@ sim_plot(sims)
 
 ## How would subsidies influence adoption of diversified practices?
 
+### large subsidy over 2 years
 
 ```{r}
-read_tsv("../../boettiger-lab/dfs-mdp/data/fig3A.tsv.gz") %>%
-  sim_plot("2-year, large subsidy")
+read_tsv("../../boettiger-lab/dfs-mdp/data/fig3A.tsv.gz") %>% sim_plot()
 ```
 
---
+---
+
+## How would subsidies influence adoption of diversified practices?
+
+### smaller subsidy over 10 years
 
 ```{r}
 read_tsv("../../boettiger-lab/dfs-mdp/data/fig3B.tsv.gz") %>%
-  sim_plot("10-year, small subsidy")
+  sim_plot()
 ```
 
 
