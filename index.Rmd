@@ -654,7 +654,6 @@ class: left, top
 - `r icon::fa("apple")` improved nutrient management
 - `r icon::fa("recycle")` carbon sequestration
 - `r icon::fa("globe")` increased resilience
-
 - `r icon::fa("seedling")` yield improvement
 - `r icon::fa("truck")` reduced fertilizer input
 - `r icon::fa("dollar-sign")` higher profitability and less risk
@@ -794,7 +793,7 @@ sim_plot(sims)
 
 ---
 
-## How would subsidies influence adoption of diversified practices?
+# How would subsidies influence adoption of diversified practices?
 
 
 --
@@ -807,7 +806,6 @@ sim_plot(sims)
 
 ---
 
-## How would subsidies influence adoption of diversified practices?
 
 ### large subsidy over 2 years
 
@@ -816,8 +814,6 @@ read_tsv("../../boettiger-lab/dfs-mdp/data/fig3A.tsv.gz") %>% sim_plot()
 ```
 
 ---
-
-## How would subsidies influence adoption of diversified practices?
 
 ### smaller subsidy over 10 years
 
@@ -925,4 +921,7 @@ ggimage("../image-library/people/dfs-cnh.jpg")
 
   
 ```
+
+Slides: <https://cboettig.github.io/talks-2019-UBC>
+
 ]
